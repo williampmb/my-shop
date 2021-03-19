@@ -20,6 +20,11 @@ function App() {
           <Route path="/cart" exact component={Cart}></Route>
           <Route path="/orders" exact component={Orders}></Route>
           <Route path="/admin/add-product" exact component={AddProduct}></Route>
+          <Route
+            path="/admin/add-product/:id"
+            exact
+            component={AddProduct}
+          ></Route>
           <Route path="/admin/products" exact component={AdminProducts}></Route>
         </Switch>
       </Router>

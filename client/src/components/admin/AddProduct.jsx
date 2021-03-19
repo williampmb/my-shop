@@ -1,5 +1,5 @@
 import "./add-product.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 
 const AddProduct = () => {
@@ -10,13 +10,57 @@ const AddProduct = () => {
   const history = useHistory();
   const { id } = useParams();
 
+  const editMode = !id ? false : true;
+
+  useEffect(() => {
+    if (editMode) {
+      fetch(`http://localhost:3000/admin/edit-product/${id}`)
+        .then((resp) => {
+          if (resp.status === 200) {
+            console.log("Edit prod from server: ", resp);
+            return resp.json();
+          }
+        })
+        .then((data) => {
+          console.log("EDITING PRODUCT ID :", data);
+          setTitle(data.title);
+          setDescription(data.description);
+          setImgUrl(data.imageUrl);
+          setPrice(Number(data.price));
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [editMode, id]);
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    fetch("http://localhost:3001/admin/add-product", {
+    if (editMode) {
+      editProduct();
+    } else {
+      addProduct();
+    }
+  };
+
+  const editProduct = () => {
+    fetch("http://localhost:3000/admin/edit-product", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, price, imgUrl, description }),
+      body: JSON.stringify({ id, title, price, imgUrl, description }),
+    })
+      .then((resp) => {
+        history.push("/");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const addProduct = () => {
+    fetch("http://localhost:3000/admin/add-product", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, title, price, imgUrl, description }),
     })
       .then((resp) => {
         history.push("/");
@@ -47,6 +91,7 @@ const AddProduct = () => {
           id="title"
           type="text"
           name="title"
+          value={title}
           onChange={handleTitleChange}
         ></input>
       </label>
@@ -56,6 +101,7 @@ const AddProduct = () => {
           id="image"
           type="text"
           name="image"
+          value={imgUrl}
           onChange={handleImageChange}
         ></input>
       </label>
@@ -66,6 +112,7 @@ const AddProduct = () => {
           type="number"
           step="0.01"
           name="price"
+          value={price}
           onChange={handlePriceChange}
         ></input>
       </label>
@@ -75,6 +122,7 @@ const AddProduct = () => {
           id="description"
           name="description"
           rows={5}
+          value={description}
           onChange={handleDescriptionChange}
         />
       </label>

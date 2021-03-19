@@ -6,7 +6,6 @@ const Header = () => {
   const [page, setPage] = useState(1);
 
   const handleClick = (selectedPage) => {
-    console.log(selectedPage);
     setPage(selectedPage);
   };
 

@@ -6,6 +6,7 @@ exports.getProducts = (request, response, next) => {
   });
 };
 exports.getProductId = (request, response, next) => {
+  console.log("Get Product Id");
   const productId = request.params.id;
 
   Product.findById(productId, (product) => {
