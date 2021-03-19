@@ -1,0 +1,48 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.btn {
+  font-size: 0.8rem;
+  padding: 0.3rem 0.6rem;
+  /* padding: top right bottom left; 4 parameters */
+  /* padding: top-bottom right-left ; 2 parameters*/
+  /* padding: top-bottom-right-left ;  1 parameter*/
+}
+
+.btn:hover {
+  background-color: rebeccapurple;
+  color: whitesmoke;
+}
+
+a.btn {
+  font-size: 1rem;
+  padding: 0.3rem 0.6rem;
+  text-decoration: none;
+  color: black;
+  text-align: center;
+  border: 1px solid gray;
+  background-color: whitesmoke;
+  /* padding: top right bottom left; 4 parameters */
+  /* padding: top-bottom right-left ; 2 parameters*/
+  /* padding: top-bottom-right-left ;  1 parameter*/
+}
+
+a.btn:hover {
+  background-color: rebeccapurple;
+  color: whitesmoke;
+}

@@ -1,0 +1,24 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+hr {
+  margin-top: 1rem;
+  width: 60%;
+}
+
+h1,
+h2,
+p,
+.product-image {
+  margin-top: 3rem;
+}
+
+.btn {
+  margin-top: 1rem;
+}
