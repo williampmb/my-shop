@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-
+const Cart = require("./cart");
 const products = [];
 
 const p = path.join(
@@ -51,7 +51,26 @@ class Product {
   static findById(id, callback) {
     getProductsFromFile((products) => {
       const product = products.find((p) => p.id === id);
+      if (!product) {
+        console.log("Product not found");
+        return;
+      }
       callback(product);
+    });
+  }
+
+  static deleteById(id, cb) {
+    getProductsFromFile((products) => {
+      const product = products.find((prod) => prod.id === id);
+      const newList = products.filter((prod) => prod.id !== id);
+      fs.writeFile(p, JSON.stringify(newList), (err) => {
+        if (!err) {
+          console.log("deleting product");
+          Cart.deleteProduct(id, product.price);
+          cb(200);
+        }
+        console.log(err);
+      });
     });
   }
 }

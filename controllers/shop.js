@@ -26,7 +26,33 @@ exports.getIndex = (req, response, next) => {
 };
 
 exports.getCart = (req, response, next) => {
-  response.status(200).json({ title: "MyCart" });
+  Cart.loadCart((cart) => {
+    Product.fetchAll((products) => {
+      console.log("numb prod:", products.length);
+
+      let myCart = [];
+      for (let item of cart.products) {
+        for (let prod of products) {
+          if (item.id === prod.id) {
+            myCart.push({ prod, qty: item.qty });
+            break;
+          }
+        }
+      }
+      console.log("wholecart:", cart.length);
+      console.log("resp", myCart);
+      console.log("CART in getCart ", myCart);
+      response.status(200).json(myCart);
+    });
+  });
+};
+
+exports.deleteCartItem = (request, response, next) => {
+  const prodId = request.body.id;
+  Product.findById(prodId, (product) => {
+    Cart.deleteProduct(prodId, product.price);
+    response.status(200).send();
+  });
 };
 
 exports.postCart = (req, response, next) => {

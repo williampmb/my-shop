@@ -36,6 +36,7 @@ const Shop = () => {
       imgAlt={product.title}
       description={product.description}
       price={product.price}
+      id={product.id}
     ></Card>
   ));
 

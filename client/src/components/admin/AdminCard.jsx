@@ -1,17 +1,18 @@
 import "../../pages/shop.css";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+
 const AdminCard = ({ title, imgSrc, imgAlt, price, description, id }) => {
+  const history = useHistory();
+
   const handleDeleteProduct = (e) => {
     e.preventDefault();
-    fetch("http://localhost:3000/admin/delete-product", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        body: JSON.stringify({ id: 1 }),
-      },
+    fetch(`http://localhost:3000/admin/delete-product/${id}`, {
+      method: "DELETE",
+      headers: {},
     })
       .then((resp) => {
         console.log("sucess deleting product");
+        history.push("/");
       })
       .catch((err) => {
         console.log("erro while deleting product");

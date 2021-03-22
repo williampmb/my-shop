@@ -41,3 +41,11 @@ exports.getProductForEditing = (request, response, next) => {
     response.status(200).send(product);
   });
 };
+
+exports.deleteProduct = (request, response, next) => {
+  const id = request.params.id;
+
+  Product.deleteById(id, (statusCode) => {
+    response.status(statusCode).send();
+  });
+};
