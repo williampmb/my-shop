@@ -19,6 +19,7 @@ const Card = ({ title, imgSrc, imgAlt, price, description, id }) => {
       .catch((err) => {});
   };
 
+  console.log(imgSrc);
   return (
     <article className="card product-item">
       <header className="card__header">

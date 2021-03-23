@@ -16,6 +16,7 @@ const Shop = () => {
         //throw new Error(response);
       })
       .then((data) => {
+        console.log("SHOPJSX RESPONSE SERVER:", data);
         setProducts(data);
       })
       .catch((err) => {
@@ -32,7 +33,7 @@ const Shop = () => {
     <Card
       key={index}
       title={product.title}
-      imgSrc={product.imageUrl}
+      imgSrc={product.image_url}
       imgAlt={product.title}
       description={product.description}
       price={product.price}

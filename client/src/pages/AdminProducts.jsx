@@ -36,7 +36,7 @@ const AdminProducts = () => {
         <AdminCard
           key={index}
           title={product.title}
-          imgSrc={product.imageUrl}
+          imgSrc={product.image_url}
           imgAlt="Book"
           description={product.description}
           price={product.price}

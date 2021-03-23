@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 
 const Cart = () => {
   const [item, setItems] = useState([]);
+  const history = useHistory();
   useEffect(() => {
     fetchCartItens();
   }, []);
@@ -34,22 +36,71 @@ const Cart = () => {
         console.log(err);
       });
   };
+
+  const handleCreateOrder = () => {
+    fetch("http://localhost:3000/create-order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: "1" }),
+    })
+      .then((response) => {
+        history.push("/orders");
+        console.log("ORDER COMPLETE");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
-    <div>
-      {item.length !== 0 && (
-        <ul>
-          {item.map((item, index) => (
-            <li key={index}>
-              <p>{item.prod.title + " " + item.qty}</p>
-              <button onClick={() => handleDeleteItem(item.prod)}>
-                Delete
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
-      {item.length === 0 && <p>No records in Carts</p>}
-    </div>
+    <main
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        alignSelf: "center",
+        marginTop: "5rem",
+      }}
+    >
+      <div style={{}}>
+        {item.length !== 0 && (
+          <table>
+            <thead>
+              <tr>
+                <td>Name</td>
+                <td>Quantity</td>
+                <td></td>
+              </tr>
+            </thead>
+            <tbody>
+              {item.map((item, index) => (
+                <tr key={index}>
+                  <td>{item.title} </td>
+                  <td>{item.cartItem.quantity}</td>
+                  <td>
+                    <button onClick={() => handleDeleteItem(item)}>
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+        {item.length === 0 && <p>No records in Carts</p>}
+      </div>
+      <div
+        style={{
+          marginLeft: "5rem",
+        }}
+      >
+        <form onSubmit={handleCreateOrder}>
+          <button type="submit" className="btn">
+            Order Now!
+          </button>
+        </form>
+      </div>
+    </main>
   );
 };
 export default Cart;

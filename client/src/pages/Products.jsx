@@ -31,10 +31,10 @@ const Products = () => {
       key={index}
       id={product.id}
       title={product.title}
-      imgSrc={product.imageUrl}
-      imgAlt="Book"
-      description={product.title}
-      price={product.title}
+      imgSrc={product.image_url}
+      imgAlt={product.title}
+      description={product.description}
+      price={product.price}
     ></Card>
   ));
 
