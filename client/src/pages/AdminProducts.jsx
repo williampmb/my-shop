@@ -40,7 +40,7 @@ const AdminProducts = () => {
           imgAlt="Book"
           description={product.description}
           price={product.price}
-          id={product.id}
+          id={product._id}
         ></AdminCard>
       ));
 

@@ -29,7 +29,7 @@ const Products = () => {
   const ListProduct = products.map((product, index) => (
     <Card
       key={index}
-      id={product.id}
+      id={product._id}
       title={product.title}
       imgSrc={product.image_url}
       imgAlt={product.title}
