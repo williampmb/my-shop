@@ -1,4 +1,5 @@
 const Product = require("../models/product");
+const User = require("../models/user");
 
 exports.getProducts = (request, response, next) => {
   Product.fetchAll()
@@ -66,7 +67,18 @@ exports.deleteCartItem = (request, response, next) => {
 
 exports.postCart = (req, response, next) => {
   const productId = req.body.id;
-  let fetchedCart;
+  console.log("POST CART");
+  Product.findById(productId)
+    .then((product) => {
+      return req.user.addToCart(product);
+    })
+    .then((result) => {
+      console.log("POst cart result", result);
+      console.log(result);
+    })
+    .catch((err) => console.log(err));
+
+  /* let fetchedCart;
   let updatedQuantity = 1;
   req.user
     .getCart()
@@ -93,7 +105,7 @@ exports.postCart = (req, response, next) => {
 
       response.status(200).send();
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.log(err));*/
 };
 exports.getCheckout = (req, response, next) => {
   response.status(200).json({ title: "MyCheckout" });
