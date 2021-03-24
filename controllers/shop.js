@@ -22,8 +22,8 @@ exports.getProductId = (request, response, next) => {
 
 exports.getOrders = (request, response, next) => {
   request.user
-    .getOrders({ include: ["products"] })
-    .then((order) => response.status(200).json(order))
+    .getOrders()
+    .then((orders) => response.status(200).json(orders))
     .catch((err) => console.log(err));
 };
 

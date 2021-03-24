@@ -20,13 +20,13 @@ const Orders = () => {
       });
   };
 
-  const ListOrders = orders.map((order) => (
-    <li>
-      <h2># {order.id}</h2>
+  const ListOrders = orders.map((order, index) => (
+    <li key={order._id}>
+      <h2># {order._id}</h2>
       <ul>
-        {order.products.map((prod) => (
-          <li>
-            {prod.title} {prod.orderItem.quantity}
+        {order.items.map((prod, index) => (
+          <li key={index}>
+            {prod.title} {prod.quantity}
           </li>
         ))}
       </ul>
