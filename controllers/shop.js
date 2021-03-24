@@ -102,27 +102,9 @@ exports.getCheckout = (req, response, next) => {
 };
 
 exports.postOrder = (request, response, next) => {
-  let updatedCart;
   request.user
-    .getCart()
-    .then((cart) => {
-      updatedCart = cart;
-      return cart.getProducts();
-    })
-    .then((products) => {
-      return request.user.createOrder().then((order) =>
-        order.addProducts(
-          products.map((product) => {
-            product.orderItem = { quantity: product.cartItem.quantity };
-            return product;
-          })
-        )
-      );
-    })
-    .then((result) => {
-      updatedCart.setProducts(null);
-    })
-    .then((result) => {
+    .addOrder()
+    .then(() => {
       response.status(200).send();
     })
     .catch((err) => console.log(err));
