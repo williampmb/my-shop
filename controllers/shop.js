@@ -39,26 +39,18 @@ exports.getIndex = (req, response, next) => {
 exports.getCart = (req, response, next) => {
   req.user
     .getCart()
-    .then((cart) => {
-      return cart.getProducts().then((products) => {
-        response.status(200).json(products);
-      });
+    .then((products) => {
+      console.log("CART PRODUCTS", products);
+      response.status(200).json(products);
     })
     .catch((err) => console.log(err));
 };
 
 exports.deleteCartItem = (request, response, next) => {
   const prodId = request.body.id;
-
+  console.log("DELETE CART ITEM ", prodId);
   request.user
-    .getCart()
-    .then((cart) => {
-      return cart.getProducts({ where: { id: prodId } });
-    })
-    .then((products) => {
-      const product = products[0];
-      return product.cartItem.destroy();
-    })
+    .deteleItemFromCart(prodId)
     .then((result) => {
       response.status(200).send();
     })
@@ -67,14 +59,12 @@ exports.deleteCartItem = (request, response, next) => {
 
 exports.postCart = (req, response, next) => {
   const productId = req.body.id;
-  console.log("POST CART");
   Product.findById(productId)
     .then((product) => {
       return req.user.addToCart(product);
     })
     .then((result) => {
-      console.log("POst cart result", result);
-      console.log(result);
+      response.status(200).send();
     })
     .catch((err) => console.log(err));
 

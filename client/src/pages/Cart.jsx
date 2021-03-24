@@ -26,7 +26,7 @@ const Cart = () => {
     fetch("http://localhost:3000/delete-cart-item", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: item.id }),
+      body: JSON.stringify({ id: item._id }),
     })
       .then((response) => {
         console.log("CART FIXED");
@@ -76,7 +76,7 @@ const Cart = () => {
               {item.map((item, index) => (
                 <tr key={index}>
                   <td>{item.title} </td>
-                  <td>{item.cartItem.quantity}</td>
+                  <td>{item.quantity}</td>
                   <td>
                     <button onClick={() => handleDeleteItem(item)}>
                       Delete
