@@ -23,10 +23,11 @@ const Cart = () => {
   };
 
   const handleDeleteItem = (item) => {
+    console.log(item);
     fetch("http://localhost:3000/delete-cart-item", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: item._id }),
+      body: JSON.stringify({ id: item.productId._id }),
     })
       .then((response) => {
         console.log("CART FIXED");
@@ -37,15 +38,17 @@ const Cart = () => {
       });
   };
 
-  const handleCreateOrder = () => {
+  const handleCreateOrder = (event) => {
+    event.preventDefault();
     fetch("http://localhost:3000/create-order", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: "1" }),
     })
       .then((response) => {
-        history.push("/orders");
         console.log("ORDER COMPLETE");
+        setItems([]);
+        history.push("/orders");
       })
       .catch((err) => {
         console.log(err);
@@ -75,7 +78,7 @@ const Cart = () => {
             <tbody>
               {item.map((item, index) => (
                 <tr key={index}>
-                  <td>{item.title} </td>
+                  <td>{item.productId.title} </td>
                   <td>{item.quantity}</td>
                   <td>
                     <button onClick={() => handleDeleteItem(item)}>

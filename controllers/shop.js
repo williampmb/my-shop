@@ -1,5 +1,6 @@
 const Product = require("../models/product");
 const User = require("../models/user");
+const Order = require("../models/order");
 
 exports.getProducts = (request, response, next) => {
   Product.find()
@@ -21,8 +22,7 @@ exports.getProductId = (request, response, next) => {
 };
 
 exports.getOrders = (request, response, next) => {
-  request.user
-    .getOrders()
+  Order.find({ "user.userId": request.user._id })
     .then((orders) => response.status(200).json(orders))
     .catch((err) => console.log(err));
 };
@@ -38,8 +38,10 @@ exports.getIndex = (req, response, next) => {
 
 exports.getCart = (req, response, next) => {
   req.user
-    .getCart()
-    .then((products) => {
+    .populate("cart.items.productId")
+    .execPopulate()
+    .then((user) => {
+      const products = user.cart.items;
       console.log("CART PRODUCTS", products);
       response.status(200).json(products);
     })
@@ -48,9 +50,9 @@ exports.getCart = (req, response, next) => {
 
 exports.deleteCartItem = (request, response, next) => {
   const prodId = request.body.id;
-  console.log("DELETE CART ITEM ", prodId);
+  console.log("id from cart to be removed", prodId);
   request.user
-    .deteleItemFromCart(prodId)
+    .removeFromCart(prodId)
     .then((result) => {
       response.status(200).send();
     })
@@ -103,7 +105,21 @@ exports.getCheckout = (req, response, next) => {
 
 exports.postOrder = (request, response, next) => {
   request.user
-    .addOrder()
+    .populate("cart.items.productId")
+    .execPopulate()
+    .then((user) => {
+      const products = user.cart.items.map((i) => {
+        return { quantity: i.quantity, product: { ...i.productId._doc } };
+      });
+      const order = new Order({
+        user: { name: request.user.name, userId: request.user },
+        products: products,
+      });
+      return order.save();
+    })
+    .then(() => {
+      return request.user.clearCart();
+    })
     .then(() => {
       response.status(200).send();
     })

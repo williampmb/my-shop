@@ -5,7 +5,13 @@ exports.addProduct = (req, response, next) => {
   const imageUrl = req.body.imgUrl;
   const price = req.body.price;
   const description = req.body.description;
-  const product = new Product({ title, price, description, imageUrl });
+  const product = new Product({
+    title,
+    price,
+    description,
+    imageUrl,
+    userId: req.user,
+  });
   product
     .save()
     .then(() => {
@@ -17,6 +23,8 @@ exports.addProduct = (req, response, next) => {
 
 exports.getProducts = (request, response, next) => {
   Product.find()
+    // .select("title price -_id")
+    // .populate("userId", "name")
     .then((result) => {
       response.status(200).json(result);
     })
