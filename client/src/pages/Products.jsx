@@ -31,7 +31,7 @@ const Products = () => {
       key={index}
       id={product._id}
       title={product.title}
-      imgSrc={product.image_url}
+      imgSrc={product.imageUrl}
       imgAlt={product.title}
       description={product.description}
       price={product.price}

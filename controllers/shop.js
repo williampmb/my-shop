@@ -2,7 +2,7 @@ const Product = require("../models/product");
 const User = require("../models/user");
 
 exports.getProducts = (request, response, next) => {
-  Product.fetchAll()
+  Product.find()
     .then((result) => {
       console.log("RESULT FROM GET PRODUCTS", result);
 
@@ -28,7 +28,7 @@ exports.getOrders = (request, response, next) => {
 };
 
 exports.getIndex = (req, response, next) => {
-  Product.fetchAll()
+  Product.find()
     .then((result) => {
       console.log("RESULT FROM GET INDEX", result);
       response.status(200).json(result);

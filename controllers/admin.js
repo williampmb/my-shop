@@ -1,19 +1,11 @@
 const Product = require("../models/product");
 
 exports.addProduct = (req, response, next) => {
-  console.log("SAVING PRODUCT OF USER ID: ", req.user._id);
   const title = req.body.title;
-  const image_url = req.body.imgUrl;
+  const imageUrl = req.body.imgUrl;
   const price = req.body.price;
   const description = req.body.description;
-  const product = new Product(
-    title,
-    price,
-    description,
-    image_url,
-    null,
-    req.user._id
-  );
+  const product = new Product({ title, price, description, imageUrl });
   product
     .save()
     .then(() => {
@@ -24,7 +16,7 @@ exports.addProduct = (req, response, next) => {
 };
 
 exports.getProducts = (request, response, next) => {
-  Product.fetchAll()
+  Product.find()
     .then((result) => {
       response.status(200).json(result);
     })
@@ -32,18 +24,20 @@ exports.getProducts = (request, response, next) => {
 };
 
 exports.editProduct = (request, response, next) => {
-  console.log("Get product for editing");
-
   const id = request.body.id;
   const title = request.body.title;
   const imgUrl = request.body.imgUrl;
   const price = request.body.price;
   const description = request.body.description;
 
-  const updatedProduct = new Product(title, price, description, imgUrl, id);
-
-  updatedProduct
-    .save()
+  Product.findById(id)
+    .then((product) => {
+      product.title = title;
+      product.imageUrl = imgUrl;
+      product.price = price;
+      product.description = description;
+      return product.save();
+    })
     .then((result) => {
       console.log("UPDATE");
       response.status(200).send({});
@@ -61,9 +55,8 @@ exports.getProductForEditing = (request, response, next) => {
 exports.deleteProduct = (request, response, next) => {
   const id = request.params.id;
 
-  Product.deleteByid(id)
+  Product.findByIdAndRemove(id)
     .then((result) => {
-      console.log("Destroyed Product:", id);
       response.status(200).send();
     })
     .catch((err) => {

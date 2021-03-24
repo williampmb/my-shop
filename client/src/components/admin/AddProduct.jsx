@@ -25,7 +25,7 @@ const AddProduct = () => {
           console.log("EDITING PRODUCT ID :", data);
           setTitle(data.title);
           setDescription(data.description);
-          setImgUrl(data.image_url);
+          setImgUrl(data.imageUrl);
           setPrice(Number(data.price));
         })
         .catch((err) => console.log(err));
