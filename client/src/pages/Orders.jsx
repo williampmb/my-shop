@@ -1,4 +1,8 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
+
+axios.defaults.withCredentials = true;
+
 const Orders = () => {
   const [orders, setOrders] = useState([]);
 
@@ -7,9 +11,10 @@ const Orders = () => {
   }, []);
 
   const fetchOrders = () => {
-    fetch("http://localhost:3000/orders")
+    axios
+      .get("http://localhost:3000/orders")
       .then((response) => {
-        return response.json();
+        return response.data;
       })
       .then((orders) => {
         console.log(orders);

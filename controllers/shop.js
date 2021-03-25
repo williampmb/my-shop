@@ -3,6 +3,7 @@ const User = require("../models/user");
 const Order = require("../models/order");
 
 exports.getProducts = (request, response, next) => {
+  console.log("SESSION GET PRODUCTS", request.session);
   Product.find()
     .then((result) => {
       console.log("RESULT FROM GET PRODUCTS", result);
@@ -13,7 +14,7 @@ exports.getProducts = (request, response, next) => {
 };
 exports.getProductId = (request, response, next) => {
   const productId = request.params.id;
-
+  console.log("SESSION IN PRODUCT ID ", request.session);
   Product.findById(productId)
     .then((data) => {
       response.status(200).send(data);
@@ -28,9 +29,15 @@ exports.getOrders = (request, response, next) => {
 };
 
 exports.getIndex = (req, response, next) => {
+  console.log("SESSION GET INDEX", req.session);
+
+  /* response.setHeader("Access-Control-Allow-Origin: http://localhost:3001/");
+  response.setHeader("Access-Control-Allow-Credentials: true");
+  response.setHeader("Access-Control-Allow-Methods: GET, POST");
+  response.setHeader("Access-Control-Allow-Headers: Content-Type, *");*/
+  response.setHeader("Set-Cookie", "abcdes");
   Product.find()
     .then((result) => {
-      console.log("RESULT FROM GET INDEX", result);
       response.status(200).json(result);
     })
     .catch((err) => console.log(err));
@@ -69,35 +76,6 @@ exports.postCart = (req, response, next) => {
       response.status(200).send();
     })
     .catch((err) => console.log(err));
-
-  /* let fetchedCart;
-  let updatedQuantity = 1;
-  req.user
-    .getCart()
-    .then((cart) => {
-      fetchedCart = cart;
-      return cart.getProducts({ where: { id: productId } });
-    })
-    .then((products) => {
-      let product;
-      if (products.length > 0) {
-        product = products[0];
-      }
-      if (product) {
-        const curQuantity = product.cartItem.quantity;
-        updatedQuantity += curQuantity;
-        return product;
-      }
-      return Product.findByPk(productId);
-    })
-    .then((product) => {
-      fetchedCart.addProduct(product, {
-        through: { quantity: updatedQuantity },
-      });
-
-      response.status(200).send();
-    })
-    .catch((err) => console.log(err));*/
 };
 exports.getCheckout = (req, response, next) => {
   response.status(200).json({ title: "MyCheckout" });

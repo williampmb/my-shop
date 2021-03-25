@@ -49,13 +49,13 @@ const Header = () => {
           >
             Orders
           </NavItem>
-          <NavItem
+          {/* <NavItem
             isActive={page === 4}
             to="/admin/add-product"
             onClick={() => {
               handleClick(4);
             }}
-          >
+          >\
             Add Product
           </NavItem>
           <NavItem
@@ -64,8 +64,15 @@ const Header = () => {
             onClick={() => handleClick(5)}
           >
             Admin Products
-          </NavItem>
+          </NavItem> */}
         </ul>
+        <div className="main-header__login">
+          <form action="/login">
+            <button className="main-header__btn" type="submit">
+              Login
+            </button>
+          </form>
+        </div>
       </nav>
     </header>
   );

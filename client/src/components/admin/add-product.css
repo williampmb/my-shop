@@ -18,6 +18,14 @@
   font-size: 1rem;
 }
 
+.form-control.btn {
+  font-size: 1.5rem;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 input {
   height: 1.5rem;
 }

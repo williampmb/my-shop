@@ -1,26 +1,28 @@
 import Card from "../components/shop/Card";
 import "./shop.css";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
+axios.defaults.withCredentials = true;
 const Products = () => {
   const [products, setProducts] = useState([]);
   useEffect(() => {
     const abortCont = new AbortController();
 
-    fetch("http://localhost:3000/", { signal: abortCont.signal })
+    axios
+      .get("http://localhost:3000/")
       .then((response) => {
+        console.log("RESPONSE FROM /");
         if (response.status === 200) {
-          return response.json();
+          setProducts(response.data);
         }
       })
-      .then((data) => {
-        setProducts(data);
-      })
+      .then((data) => {})
       .catch((err) => {
         if (err.name === "AbortError") {
           console.log("fetch abort");
         } else {
-          console.log("erro shop");
+          console.log(err);
         }
       });
     return () => abortCont.abort(); //abort any fetch that is not complete

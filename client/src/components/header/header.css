@@ -17,6 +17,7 @@
   width: 65%;
   justify-content: flex-end;
   height: 100%;
+  margin-right: 5rem;
 }
 
 .main-header__item {
@@ -53,4 +54,28 @@
 .main-header__link {
   display: flex;
   align-items: center;
+}
+
+.main-header__login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.main-header__btn {
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: rebeccapurple;
+  color: whitesmoke;
+  border-radius: 1rem;
+  /* padding: top right bottom left; 4 parameters */
+  /* padding: top-bottom right-left ; 2 parameters*/
+  /* padding: top-bottom-right-left ;  1 parameter*/
+}
+
+.main-header__btn:hover {
+  background-color: whitesmoke;
+  color: rebeccapurple;
+  border-color: rebeccapurple;
 }

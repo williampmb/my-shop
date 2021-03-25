@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+import axios from "axios";
 
+axios.defaults.withCredentials = true;
 const Cart = () => {
   const [item, setItems] = useState([]);
   const history = useHistory();
@@ -9,9 +11,10 @@ const Cart = () => {
   }, []);
 
   const fetchCartItens = () => {
-    fetch("http://localhost:3000/cart")
+    axios
+      .get("http://localhost:3000/cart")
       .then((response) => {
-        if (response.status === 200) return response.json();
+        if (response.status === 200) return response.data;
       })
       .then((data) => {
         console.log(data);
@@ -24,11 +27,10 @@ const Cart = () => {
 
   const handleDeleteItem = (item) => {
     console.log(item);
-    fetch("http://localhost:3000/delete-cart-item", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: item.productId._id }),
-    })
+    axios
+      .post("http://localhost:3000/delete-cart-item", {
+        id: item.productId._id,
+      })
       .then((response) => {
         console.log("CART FIXED");
         fetchCartItens();
@@ -40,11 +42,10 @@ const Cart = () => {
 
   const handleCreateOrder = (event) => {
     event.preventDefault();
-    fetch("http://localhost:3000/create-order", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: "1" }),
-    })
+    axios
+      .post("http://localhost:3000/create-order", {
+        id: "1",
+      })
       .then((response) => {
         console.log("ORDER COMPLETE");
         setItems([]);

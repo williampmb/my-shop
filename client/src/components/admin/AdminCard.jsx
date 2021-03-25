@@ -1,15 +1,15 @@
 import "../../pages/shop.css";
 import { Link, useHistory } from "react-router-dom";
+import axios from "axios";
 
+axios.defaults.withCredentials = true;
 const AdminCard = ({ title, imgSrc, imgAlt, price, description, id }) => {
   const history = useHistory();
 
   const handleDeleteProduct = (e) => {
     e.preventDefault();
-    fetch(`http://localhost:3000/admin/delete-product/${id}`, {
-      method: "DELETE",
-      headers: {},
-    })
+    axios
+      .delete(`http://localhost:3000/admin/delete-product/${id}`)
       .then((resp) => {
         console.log("sucess deleting product");
         history.push("/");

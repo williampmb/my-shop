@@ -7,6 +7,7 @@ import Orders from "./pages/Orders";
 import Products from "./pages/Products";
 import AdminProducts from "./pages/AdminProducts";
 import ProductDetail from "./pages/ProductDetail";
+import Login from "./pages/Login";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Header></Header>
         <Switch>
           <Route path="/" exact component={Shop}></Route>
+          <Route path="/login" exact component={Login}></Route>
           <Route path="/products" exact component={Products}></Route>
           <Route path="/product/:id" exact component={ProductDetail}></Route>
           <Route path="/cart" exact component={Cart}></Route>

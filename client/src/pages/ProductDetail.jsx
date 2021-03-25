@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import "./product-details.css";
+import axios from "axios";
+
+axios.defaults.withCredentials = true;
 
 const ProductDetail = () => {
   const [product, setProduct] = useState({});
@@ -8,11 +11,10 @@ const ProductDetail = () => {
   const history = useHistory();
 
   const handleAddCart = () => {
-    fetch("http://localhost:3000/cart", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id }),
-    })
+    axios
+      .post("http://localhost:3000/cart", {
+        id,
+      })
       .then((response) => {
         if (response.status === 200) {
           history.push("/cart");
@@ -24,10 +26,11 @@ const ProductDetail = () => {
   useEffect(() => {
     const abortFetch = new AbortController();
 
-    fetch(`http://localhost:3000/product/${id}`, { signal: abortFetch.signal })
+    axios
+      .get(`http://localhost:3000/product/${id}`, { signal: abortFetch.signal })
       .then((response) => {
         if (response.status === 200) {
-          return response.json();
+          return response.data;
         }
       })
       .then((data) => {

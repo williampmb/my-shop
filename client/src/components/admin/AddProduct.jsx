@@ -1,6 +1,9 @@
 import "./add-product.css";
 import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
+import axios from "axios";
+
+axios.defaults.withCredentials = true;
 
 const AddProduct = () => {
   const [title, setTitle] = useState("");
@@ -14,11 +17,10 @@ const AddProduct = () => {
 
   useEffect(() => {
     if (editMode) {
-      fetch(`http://localhost:3000/admin/edit-product/${id}`)
+      axios(`http://localhost:3000/admin/edit-product/${id}`)
         .then((resp) => {
           if (resp.status === 200) {
-            console.log("Edit prod from server: ", resp);
-            return resp.json();
+            return resp.data;
           }
         })
         .then((data) => {
@@ -43,11 +45,14 @@ const AddProduct = () => {
   };
 
   const editProduct = () => {
-    fetch("http://localhost:3000/admin/edit-product", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, title, price, imgUrl, description }),
-    })
+    axios
+      .post("http://localhost:3000/admin/edit-product", {
+        id,
+        title,
+        price,
+        imgUrl,
+        description,
+      })
       .then((resp) => {
         history.push("/");
       })
@@ -57,11 +62,14 @@ const AddProduct = () => {
   };
 
   const addProduct = () => {
-    fetch("http://localhost:3000/admin/add-product", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, title, price, imgUrl, description }),
-    })
+    axios
+      .post("http://localhost:3000/admin/add-product", {
+        id,
+        title,
+        price,
+        imgUrl,
+        description,
+      })
       .then((resp) => {
         history.push("/");
       })
