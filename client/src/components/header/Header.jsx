@@ -1,6 +1,7 @@
 import "./header.css";
 import NavItem from "./NavItem";
 import { useState } from "react";
+import { useLoginContext } from "../../context/LoginContext";
 
 const Header = () => {
   const [page, setPage] = useState(1);
@@ -8,6 +9,7 @@ const Header = () => {
   const handleClick = (selectedPage) => {
     setPage(selectedPage);
   };
+  const [user] = useLoginContext();
 
   return (
     <header className="main-header">
@@ -49,22 +51,26 @@ const Header = () => {
           >
             Orders
           </NavItem>
-          {/* <NavItem
-            isActive={page === 4}
-            to="/admin/add-product"
-            onClick={() => {
-              handleClick(4);
-            }}
-          >\
-            Add Product
-          </NavItem>
-          <NavItem
-            isActive={page === 5}
-            to="/admin/products"
-            onClick={() => handleClick(5)}
-          >
-            Admin Products
-          </NavItem> */}
+          {user && (
+            <NavItem
+              isActive={page === 4}
+              to="/admin/add-product"
+              onClick={() => {
+                handleClick(4);
+              }}
+            >
+              Add Product
+            </NavItem>
+          )}
+          {user && (
+            <NavItem
+              isActive={page === 5}
+              to="/admin/products"
+              onClick={() => handleClick(5)}
+            >
+              Admin Products
+            </NavItem>
+          )}
         </ul>
         <div className="main-header__login">
           <form action="/login">

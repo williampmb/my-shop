@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
+import { useLoginContext } from "../context/LoginContext";
 
 axios.defaults.withCredentials = true;
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
+  const user = useLoginContext.user;
+  const [, updateUser] = useLoginContext();
   const history = useHistory();
 
   useEffect(() => {});
@@ -16,6 +18,8 @@ const Login = () => {
     axios
       .post("http://localhost:3000/login")
       .then(() => {
+        let user = null;
+        updateUser(user);
         console.log("LOGIN SUCCESS");
         history.push("/");
       })

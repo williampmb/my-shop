@@ -10,7 +10,7 @@ exports.addProduct = (req, response, next) => {
     price,
     description,
     imageUrl,
-    userId: req.user,
+    userId: req.session.user,
   });
   product
     .save()

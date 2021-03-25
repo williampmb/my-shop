@@ -30,6 +30,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
   session({
+    key: "userInfo",
     secret: "longanhardsecrettohashthesessions",
     resave: false,
     saveUninitialized: false,
@@ -39,16 +40,21 @@ app.use(
 );
 //app.use(cookieParser);
 
+app.use(authRoutes);
 app.use((req, res, next) => {
-  User.findById("605b59f6bc0cd67268f62916")
-    .then((user) => {
-      req.user = user;
-      next();
-    })
-    .catch((err) => console.log(err));
+  if (!req.session.user) {
+    console.log("NOT VALID SESSION USER", req.session.user);
+    return res.status(403).send();
+  }
+  next();
+  // User.findById("605b59f6bc0cd67268f62916")
+  //   .then((user) => {
+  //     req.user = user;
+  //     next();
+  //   })
+  //   .catch((err) => console.log(err));
 });
 
-app.use(authRoutes);
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 

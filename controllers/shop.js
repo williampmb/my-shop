@@ -23,7 +23,7 @@ exports.getProductId = (request, response, next) => {
 };
 
 exports.getOrders = (request, response, next) => {
-  Order.find({ "user.userId": request.user._id })
+  Order.find({ "user.userId": request.session.user._id })
     .then((orders) => response.status(200).json(orders))
     .catch((err) => console.log(err));
 };
@@ -44,7 +44,7 @@ exports.getIndex = (req, response, next) => {
 };
 
 exports.getCart = (req, response, next) => {
-  req.user
+  req.session.user
     .populate("cart.items.productId")
     .execPopulate()
     .then((user) => {
@@ -58,7 +58,7 @@ exports.getCart = (req, response, next) => {
 exports.deleteCartItem = (request, response, next) => {
   const prodId = request.body.id;
   console.log("id from cart to be removed", prodId);
-  request.user
+  request.session.user
     .removeFromCart(prodId)
     .then((result) => {
       response.status(200).send();
@@ -70,7 +70,7 @@ exports.postCart = (req, response, next) => {
   const productId = req.body.id;
   Product.findById(productId)
     .then((product) => {
-      return req.user.addToCart(product);
+      return req.session.user.addToCart(product);
     })
     .then((result) => {
       response.status(200).send();
@@ -82,7 +82,7 @@ exports.getCheckout = (req, response, next) => {
 };
 
 exports.postOrder = (request, response, next) => {
-  request.user
+  request.session.user
     .populate("cart.items.productId")
     .execPopulate()
     .then((user) => {
@@ -90,13 +90,13 @@ exports.postOrder = (request, response, next) => {
         return { quantity: i.quantity, product: { ...i.productId._doc } };
       });
       const order = new Order({
-        user: { name: request.user.name, userId: request.user },
+        user: { name: request.session.user.name, userId: request.session.user },
         products: products,
       });
       return order.save();
     })
     .then(() => {
-      return request.user.clearCart();
+      return request.session.user.clearCart();
     })
     .then(() => {
       response.status(200).send();

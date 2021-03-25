@@ -8,28 +8,39 @@ import Products from "./pages/Products";
 import AdminProducts from "./pages/AdminProducts";
 import ProductDetail from "./pages/ProductDetail";
 import Login from "./pages/Login";
+import { LoginProvider } from "./context/LoginContext";
 
 function App() {
   return (
     <>
-      <Router>
-        <Header></Header>
-        <Switch>
-          <Route path="/" exact component={Shop}></Route>
-          <Route path="/login" exact component={Login}></Route>
-          <Route path="/products" exact component={Products}></Route>
-          <Route path="/product/:id" exact component={ProductDetail}></Route>
-          <Route path="/cart" exact component={Cart}></Route>
-          <Route path="/orders" exact component={Orders}></Route>
-          <Route path="/admin/add-product" exact component={AddProduct}></Route>
-          <Route
-            path="/admin/add-product/:id"
-            exact
-            component={AddProduct}
-          ></Route>
-          <Route path="/admin/products" exact component={AdminProducts}></Route>
-        </Switch>
-      </Router>
+      <LoginProvider>
+        <Router>
+          <Header></Header>
+          <Switch>
+            <Route path="/" exact component={Shop}></Route>
+            <Route path="/login" exact component={Login}></Route>
+            <Route path="/products" exact component={Products}></Route>
+            <Route path="/product/:id" exact component={ProductDetail}></Route>
+            <Route path="/cart" exact component={Cart}></Route>
+            <Route path="/orders" exact component={Orders}></Route>
+            <Route
+              path="/admin/add-product"
+              exact
+              component={AddProduct}
+            ></Route>
+            <Route
+              path="/admin/add-product/:id"
+              exact
+              component={AddProduct}
+            ></Route>
+            <Route
+              path="/admin/products"
+              exact
+              component={AdminProducts}
+            ></Route>
+          </Switch>
+        </Router>
+      </LoginProvider>
     </>
   );
 }
