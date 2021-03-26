@@ -3,18 +3,14 @@ const User = require("../models/user");
 const Order = require("../models/order");
 
 exports.getProducts = (request, response, next) => {
-  console.log("SESSION GET PRODUCTS", request.session);
   Product.find()
     .then((result) => {
-      console.log("RESULT FROM GET PRODUCTS", result);
-
       response.status(200).json(result);
     })
     .catch((err) => console.log(err));
 };
 exports.getProductId = (request, response, next) => {
   const productId = request.params.id;
-  console.log("SESSION IN PRODUCT ID ", request.session);
   Product.findById(productId)
     .then((data) => {
       response.status(200).send(data);
@@ -29,13 +25,6 @@ exports.getOrders = (request, response, next) => {
 };
 
 exports.getIndex = (req, response, next) => {
-  console.log("SESSION GET INDEX", req.session);
-
-  /* response.setHeader("Access-Control-Allow-Origin: http://localhost:3001/");
-  response.setHeader("Access-Control-Allow-Credentials: true");
-  response.setHeader("Access-Control-Allow-Methods: GET, POST");
-  response.setHeader("Access-Control-Allow-Headers: Content-Type, *");*/
-  response.setHeader("Set-Cookie", "abcdes");
   Product.find()
     .then((result) => {
       response.status(200).json(result);
@@ -49,7 +38,6 @@ exports.getCart = (req, response, next) => {
     .execPopulate()
     .then((user) => {
       const products = user.cart.items;
-      console.log("CART PRODUCTS", products);
       response.status(200).json(products);
     })
     .catch((err) => console.log(err));

@@ -17,9 +17,12 @@ const Login = () => {
     event.preventDefault();
     axios
       .post("http://localhost:3000/login")
+      .then((res) => {
+        console.log("USER FROM RESP", res.data);
+        let user = res.data;
+        return updateUser(user);
+      })
       .then(() => {
-        let user = null;
-        updateUser(user);
         console.log("LOGIN SUCCESS");
         history.push("/");
       })

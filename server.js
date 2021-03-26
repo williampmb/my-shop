@@ -10,7 +10,6 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const SessionStore = require("connect-mongodb-session")(session);
 const User = require("./models/user");
-const cookieParser = require("cookie-parser");
 
 const store = new SessionStore({
   uri: process.env.DATABASE,
@@ -38,7 +37,6 @@ app.use(
     cookie: { maxAge: 3600000 },
   })
 );
-//app.use(cookieParser);
 
 app.use(authRoutes);
 app.use((req, res, next) => {
@@ -47,12 +45,6 @@ app.use((req, res, next) => {
     return res.status(403).send();
   }
   next();
-  // User.findById("605b59f6bc0cd67268f62916")
-  //   .then((user) => {
-  //     req.user = user;
-  //     next();
-  //   })
-  //   .catch((err) => console.log(err));
 });
 
 app.use("/admin", adminRoutes);
