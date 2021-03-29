@@ -27,7 +27,7 @@ exports.getProductId = (request, response, next) => {
 };
 
 exports.getOrders = (request, response, next) => {
-  Order.find({ "user.userId": request.session.user._id })
+  Order.find({ "user.userId": request.user._id })
     .then((orders) =>
       response
         .status(200)
@@ -37,7 +37,6 @@ exports.getOrders = (request, response, next) => {
 };
 
 exports.getCart = (req, response, next) => {
-  console.log("USER FROM GET CART", req.session.user);
   req.user
     .populate("cart.items.productId")
     .execPopulate()
@@ -53,7 +52,7 @@ exports.getCart = (req, response, next) => {
 exports.deleteCartItem = (request, response, next) => {
   const prodId = request.body.id;
   console.log("id from cart to be removed", prodId);
-  request.session.user
+  request.user
     .removeFromCart(prodId)
     .then((result) => {
       response.status(200).send();
@@ -65,7 +64,7 @@ exports.postCart = (req, response, next) => {
   const productId = req.body.id;
   Product.findById(productId)
     .then((product) => {
-      return req.session.user.addToCart(product);
+      return req.user.addToCart(product);
     })
     .then((result) => {
       response.status(200).send();
@@ -74,7 +73,7 @@ exports.postCart = (req, response, next) => {
 };
 
 exports.postOrder = (request, response, next) => {
-  request.session.user
+  request.user
     .populate("cart.items.productId")
     .execPopulate()
     .then((user) => {
@@ -82,13 +81,13 @@ exports.postOrder = (request, response, next) => {
         return { quantity: i.quantity, product: { ...i.productId._doc } };
       });
       const order = new Order({
-        user: { name: request.session.user.name, userId: request.session.user },
+        user: { name: request.user.email, userId: request.user },
         products: products,
       });
       return order.save();
     })
     .then(() => {
-      return request.session.user.clearCart();
+      return request.user.clearCart();
     })
     .then(() => {
       response.status(200).send();

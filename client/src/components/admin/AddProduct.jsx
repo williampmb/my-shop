@@ -1,9 +1,7 @@
 import "./add-product.css";
 import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import axios from "axios";
-
-axios.defaults.withCredentials = true;
+import { getRequest, postRequest } from "../../services/fetchdata";
 
 const AddProduct = () => {
   const [title, setTitle] = useState("");
@@ -13,16 +11,13 @@ const AddProduct = () => {
   const history = useHistory();
   const { id } = useParams();
 
+  console.log("PARAMS:", id);
+
   const editMode = !id ? false : true;
 
   useEffect(() => {
     if (editMode) {
-      axios(`http://localhost:3000/admin/edit-product/${id}`)
-        .then((resp) => {
-          if (resp.status === 200) {
-            return resp.data;
-          }
-        })
+      getRequest(`/admin/edit-product/${id}`)
         .then((data) => {
           console.log("EDITING PRODUCT ID :", data);
           setTitle(data.title);
@@ -45,14 +40,13 @@ const AddProduct = () => {
   };
 
   const editProduct = () => {
-    axios
-      .post("http://localhost:3000/admin/edit-product", {
-        id,
-        title,
-        price,
-        imgUrl,
-        description,
-      })
+    postRequest("/admin/edit-product", {
+      id,
+      title,
+      price,
+      imgUrl,
+      description,
+    })
       .then((resp) => {
         history.push("/");
       })
@@ -62,14 +56,13 @@ const AddProduct = () => {
   };
 
   const addProduct = () => {
-    axios
-      .post("http://localhost:3000/admin/add-product", {
-        id,
-        title,
-        price,
-        imgUrl,
-        description,
-      })
+    postRequest("/admin/add-product", {
+      id,
+      title,
+      price,
+      imgUrl,
+      description,
+    })
       .then((resp) => {
         history.push("/");
       })

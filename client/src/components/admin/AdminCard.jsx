@@ -1,23 +1,20 @@
-import "../../pages/shop.css";
 import { Link, useHistory } from "react-router-dom";
-import axios from "axios";
-
-axios.defaults.withCredentials = true;
+import "../../pages/shop.css";
+import { deleteRequest } from "../../services/fetchdata";
 const AdminCard = ({ title, imgSrc, imgAlt, price, description, id }) => {
   const history = useHistory();
 
   const handleDeleteProduct = (e) => {
     e.preventDefault();
-    axios
-      .delete(`http://localhost:3000/admin/delete-product/${id}`)
+    deleteRequest(`/admin/delete-product/${id}`)
       .then((resp) => {
-        console.log("sucess deleting product");
         history.push("/");
       })
       .catch((err) => {
         console.log("erro while deleting product");
       });
   };
+
   return (
     <article className="card product-item">
       <header className="card__header">

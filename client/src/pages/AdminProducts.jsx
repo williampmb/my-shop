@@ -1,36 +1,19 @@
 import AdminCard from "../components/admin/AdminCard";
 import "./shop.css";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { getRequest } from "../services/fetchdata";
 
-axios.defaults.withCredentials = true;
 const AdminProducts = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    const abortCont = new AbortController();
-
-    axios
-      .get("http://localhost:3000/admin/products", {
-        signal: abortCont.signal,
-      })
-      .then((response) => {
-        if (response.status === 200) {
-          return response.data;
-        }
-        //throw new Error(response);
-      })
+    getRequest("/admin/products")
       .then((data) => {
         setProducts(data);
       })
       .catch((err) => {
-        if (err.name === "AbortError") {
-          console.log("fetch abort");
-        } else {
-          console.log(err);
-        }
+        console.log(err);
       });
-    return () => abortCont.abort(); //abort any fetch that is not complete
   }, []);
 
   const ListProduct = !products

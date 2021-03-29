@@ -1,23 +1,25 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-
-axios.defaults.withCredentials = true;
+import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+import { useLoginContext } from "../context/LoginContext";
+import { getRequest } from "../services/fetchdata";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
+  const [user] = useLoginContext();
+  const history = useHistory();
 
   useEffect(() => {
+    if (!user) {
+      history.push("/login");
+      return;
+    }
     fetchOrders();
   }, []);
 
   const fetchOrders = () => {
-    axios
-      .get("http://localhost:3000/orders")
-      .then((response) => {
-        return response.data;
-      })
+    getRequest("/orders")
       .then((orders) => {
-        console.log(orders);
+        console.log("MY ORDERS", orders);
         setOrders(orders);
       })
       .catch((err) => {

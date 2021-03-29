@@ -1,21 +1,16 @@
 import "../../pages/shop.css";
 import { Link, useHistory } from "react-router-dom";
-import axios from "axios";
+import { postRequest } from "../../services/fetchdata";
 
-axios.defaults.withCredentials = true;
 const Card = ({ title, imgSrc, imgAlt, price, description, id }) => {
-  console.log("Card Component PRod Id", id);
   const history = useHistory();
 
   const handleAddCart = () => {
-    axios
-      .post("http://localhost:3000/cart", {
-        id,
-      })
+    postRequest("/cart", {
+      id,
+    })
       .then((response) => {
-        if (response.status === 200) {
-          history.push("/cart");
-        }
+        history.push("/cart");
       })
       .catch((err) => {});
   };

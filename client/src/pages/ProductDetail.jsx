@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import "./product-details.css";
-import axios from "axios";
-
-axios.defaults.withCredentials = true;
+import { getRequest, postRequest } from "../services/fetchdata";
 
 const ProductDetail = () => {
   const [product, setProduct] = useState({});
@@ -11,37 +9,21 @@ const ProductDetail = () => {
   const history = useHistory();
 
   const handleAddCart = () => {
-    axios
-      .post("http://localhost:3000/cart", {
-        id,
-      })
+    postRequest("/cart")
       .then((response) => {
-        if (response.status === 200) {
-          history.push("/cart");
-        }
+        history.push("/cart");
       })
       .catch((err) => {});
   };
 
   useEffect(() => {
-    const abortFetch = new AbortController();
-
-    axios
-      .get(`http://localhost:3000/product/${id}`, { signal: abortFetch.signal })
-      .then((response) => {
-        if (response.status === 200) {
-          return response.data;
-        }
-      })
+    getRequest(`/product/${id}`)
       .then((data) => {
-        console.log("Data fetch product details", data);
         setProduct(data);
       })
       .catch((err) => {
         console.log("ERRO:", err);
       });
-
-    return () => abortFetch.abort();
   }, [id]);
 
   return (

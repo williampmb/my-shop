@@ -9,7 +9,10 @@ const getRequest = (path) => {
   return axios
     .get(`${proxy}${path}`)
     .then((response) => {
-      localStorage.setItem("csrfToken", response.data.csrfToken);
+      console.log("Getting data from server", response.data);
+      if (response.status === 200 && response.data.csrfToken) {
+        localStorage.setItem("csrfToken", response.data.csrfToken);
+      }
       return response.data.result;
     })
     .catch((err) => console.log(err));
@@ -35,4 +38,18 @@ const postRequest = (path, data) => {
       }
     });
 };
-export { postRequest, getRequest };
+
+const deleteRequest = (path, data) => {
+  const csrfToken = localStorage.getItem("csrfToken");
+
+  axios.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
+  return axios
+    .post(proxy + path, { ...data })
+    .then((response) => {
+      return true;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+export { postRequest, getRequest, deleteRequest };

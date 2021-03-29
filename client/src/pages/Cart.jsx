@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { getRequest, postRequest } from "../services/fetchdata";
+import { getRequest, postRequest, deleteRequest } from "../services/fetchdata";
 
 const Cart = () => {
   const [item, setItems] = useState([]);
@@ -11,11 +11,7 @@ const Cart = () => {
 
   const fetchCartItens = () => {
     getRequest("/cart")
-      .then((response) => {
-        if (response.status === 200) return response.data;
-      })
       .then((data) => {
-        console.log(data);
         setItems(data);
       })
       .catch((err) => {
@@ -24,34 +20,26 @@ const Cart = () => {
   };
 
   const handleDeleteItem = (item) => {
-    console.log(item);
-    /* axios
-      .post("http://localhost:3000/delete-cart-item", {
-        id: item.productId._id,
-      })
-      .then((response) => {
-        console.log("CART FIXED");
+    deleteRequest("/delete-cart-item", {
+      id: item.productId._id,
+    }).then((response) => {
+      if (response) {
+        console.log(response);
         fetchCartItens();
-      })
-      .catch((err) => {
-        console.log(err);
-      });*/
+      }
+    });
   };
 
   const handleCreateOrder = (event) => {
     event.preventDefault();
-    /*  axios
-      .post("http://localhost:3000/create-order", {
-        id: "1",
-      })
+    postRequest("/create-order")
       .then((response) => {
-        console.log("ORDER COMPLETE");
         setItems([]);
         history.push("/orders");
       })
       .catch((err) => {
         console.log(err);
-      });*/
+      });
   };
 
   return (
@@ -65,7 +53,7 @@ const Cart = () => {
       }}
     >
       <div style={{}}>
-        {item.length !== 0 && (
+        {item && item.length !== 0 && (
           <table>
             <thead>
               <tr>
@@ -89,7 +77,7 @@ const Cart = () => {
             </tbody>
           </table>
         )}
-        {item.length === 0 && <p>No records in Carts</p>}
+        {!item || (item.length === 0 && <p>No records in Carts</p>)}
       </div>
       <div
         style={{
