@@ -11,7 +11,7 @@ function useLoginContext() {
 }
 
 function LoginProvider(props) {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
 
   const value = useMemo(() => {
     function updateUser(user) {

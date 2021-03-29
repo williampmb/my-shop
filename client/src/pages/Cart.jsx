@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import axios from "axios";
+import { getRequest, postRequest } from "../services/fetchdata";
 
-axios.defaults.withCredentials = true;
 const Cart = () => {
   const [item, setItems] = useState([]);
   const history = useHistory();
@@ -11,8 +10,7 @@ const Cart = () => {
   }, []);
 
   const fetchCartItens = () => {
-    axios
-      .get("http://localhost:3000/cart")
+    getRequest("/cart")
       .then((response) => {
         if (response.status === 200) return response.data;
       })
@@ -27,7 +25,7 @@ const Cart = () => {
 
   const handleDeleteItem = (item) => {
     console.log(item);
-    axios
+    /* axios
       .post("http://localhost:3000/delete-cart-item", {
         id: item.productId._id,
       })
@@ -37,12 +35,12 @@ const Cart = () => {
       })
       .catch((err) => {
         console.log(err);
-      });
+      });*/
   };
 
   const handleCreateOrder = (event) => {
     event.preventDefault();
-    axios
+    /*  axios
       .post("http://localhost:3000/create-order", {
         id: "1",
       })
@@ -53,7 +51,7 @@ const Cart = () => {
       })
       .catch((err) => {
         console.log(err);
-      });
+      });*/
   };
 
   return (

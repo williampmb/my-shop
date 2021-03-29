@@ -2,43 +2,50 @@ const Product = require("../models/product");
 const User = require("../models/user");
 const Order = require("../models/order");
 
+exports.getIndex = (req, response, next) => {
+  Product.find()
+    .then((result) => {
+      response.status(200).send({ result, csrfToken: req.csrfToken() });
+    })
+    .catch((err) => console.log(err));
+};
+
 exports.getProducts = (request, response, next) => {
   Product.find()
     .then((result) => {
-      response.status(200).json(result);
+      response.status(200).send({ result, csrfToken: req.csrfToken() });
     })
     .catch((err) => console.log(err));
 };
 exports.getProductId = (request, response, next) => {
   const productId = request.params.id;
   Product.findById(productId)
-    .then((data) => {
-      response.status(200).send(data);
+    .then((result) => {
+      response.status(200).send({ result, csrfToken: req.csrfToken() });
     })
     .catch();
 };
 
 exports.getOrders = (request, response, next) => {
   Order.find({ "user.userId": request.session.user._id })
-    .then((orders) => response.status(200).json(orders))
-    .catch((err) => console.log(err));
-};
-
-exports.getIndex = (req, response, next) => {
-  Product.find()
-    .then((result) => {
-      response.status(200).json(result);
-    })
+    .then((orders) =>
+      response
+        .status(200)
+        .send({ result: orders, csrfToken: request.csrfToken() })
+    )
     .catch((err) => console.log(err));
 };
 
 exports.getCart = (req, response, next) => {
-  req.session.user
+  console.log("USER FROM GET CART", req.session.user);
+  req.user
     .populate("cart.items.productId")
     .execPopulate()
     .then((user) => {
       const products = user.cart.items;
-      response.status(200).json(products);
+      response
+        .status(200)
+        .send({ result: products, csrfToken: req.csrfToken() });
     })
     .catch((err) => console.log(err));
 };
@@ -64,9 +71,6 @@ exports.postCart = (req, response, next) => {
       response.status(200).send();
     })
     .catch((err) => console.log(err));
-};
-exports.getCheckout = (req, response, next) => {
-  response.status(200).json({ title: "MyCheckout" });
 };
 
 exports.postOrder = (request, response, next) => {

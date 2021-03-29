@@ -5,18 +5,21 @@ const shopRoutes = require("./routes/shop");
 const authRoutes = require("./routes/auth");
 const path = require("path");
 const cors = require("cors");
+const csrf = require("csurf");
 const errorController = require("./controllers/erro");
 const mongoose = require("mongoose");
 const session = require("express-session");
 const SessionStore = require("connect-mongodb-session")(session);
 const User = require("./models/user");
 
+const csrfProtection = csrf();
+
 const store = new SessionStore({
   uri: process.env.DATABASE,
   collection: "sessions",
 });
-
 const app = express();
+
 app.use(
   cors({
     credentials: true,
@@ -38,15 +41,21 @@ app.use(
   })
 );
 
-app.use(authRoutes);
+app.use(csrfProtection);
+
 app.use((req, res, next) => {
   if (!req.session.user) {
-    console.log("NOT VALID SESSION USER", req.session.user);
-    return res.status(403).send();
+    return next();
   }
-  next();
+  User.findById(req.session.user._id)
+    .then((user) => {
+      req.user = user;
+      next();
+    })
+    .catch((err) => console.log(err));
 });
 
+app.use(authRoutes);
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 

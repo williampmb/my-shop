@@ -2,33 +2,34 @@ import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { useLoginContext } from "../context/LoginContext";
-import { postRequest } from "../services/fetchdata";
 
-const Login = () => {
+axios.defaults.withCredentials = true;
+const Signup = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const user = useLoginContext.user;
-  const tk1 = useLoginContext.csrfToken;
-
-  const [, updateUser, csrfToken, , getToken] = useLoginContext();
+  const [, updateUser] = useLoginContext();
   const history = useHistory();
+
   useEffect(() => {});
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    postRequest("/login", { username, password }, csrfToken)
-      .then((data) => {
-        updateUser(data);
-        history.push("/");
+    console.log("us", username, "ps", password);
+    axios
+      .post("http://localhost:3000/signup", { username, password })
+      .then((res) => {
+        console.log("RESP SIGNUP", res);
       })
-      .catch((err) => {
-        console.log("LOGIN ERROR");
-      });
+      .then(() => {
+        history.push("/login");
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
+    console.log("u", event.target.value);
   };
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
@@ -63,4 +64,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;

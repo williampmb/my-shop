@@ -51,24 +51,28 @@ const Header = () => {
           >
             Products
           </NavItem>
-          <NavItem
-            isActive={page === 3}
-            to="/cart"
-            onClick={() => {
-              handleClick(3);
-            }}
-          >
-            Cart
-          </NavItem>
-          <NavItem
-            isActive={page === 6}
-            to="/orders"
-            onClick={() => {
-              handleClick(6);
-            }}
-          >
-            Orders
-          </NavItem>
+          {user && (
+            <NavItem
+              isActive={page === 3}
+              to="/cart"
+              onClick={() => {
+                handleClick(3);
+              }}
+            >
+              Cart
+            </NavItem>
+          )}
+          {user && (
+            <NavItem
+              isActive={page === 6}
+              to="/orders"
+              onClick={() => {
+                handleClick(6);
+              }}
+            >
+              Orders
+            </NavItem>
+          )}
           {user && (
             <NavItem
               isActive={page === 4}
@@ -95,6 +99,13 @@ const Header = () => {
             <form action="/login">
               <button className="main-header__btn" type="submit">
                 Login
+              </button>
+            </form>
+          )}
+          {!user && (
+            <form action="/signup">
+              <button className="main-header__btn" type="submit">
+                signup
               </button>
             </form>
           )}

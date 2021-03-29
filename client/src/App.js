@@ -9,6 +9,7 @@ import AdminProducts from "./pages/AdminProducts";
 import ProductDetail from "./pages/ProductDetail";
 import Login from "./pages/Login";
 import { LoginProvider } from "./context/LoginContext";
+import Signup from "./pages/Signup";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Switch>
             <Route path="/" exact component={Shop}></Route>
             <Route path="/login" exact component={Login}></Route>
+            <Route path="/signup" exact component={Signup}></Route>
             <Route path="/products" exact component={Products}></Route>
             <Route path="/product/:id" exact component={ProductDetail}></Route>
             <Route path="/cart" exact component={Cart}></Route>

@@ -1,34 +1,24 @@
-import Card from "../components/shop/Card";
-import "./shop.css";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useHistory } from "react-router-dom";
+import Card from "../components/shop/Card";
 import { useLoginContext } from "../context/LoginContext";
-
-axios.defaults.withCredentials = true;
+import { getRequest } from "../services/fetchdata";
+import "./shop.css";
 
 const Shop = () => {
   const [products, setProducts] = useState([]);
   const history = useHistory();
   const [user] = useLoginContext();
-  console.log("USER FROM CONTEXT IS: ", user);
 
   useEffect(() => {
     const abortCont = new AbortController();
 
-    axios
-      .get("http://localhost:3000/")
+    getRequest("/")
       .then((response) => {
-        console.log("HIT  RESPONSE /");
-        console.log(response);
-        if (response.status === 200) {
-          console.log("SHOPJSX RESPONSE SERVER:", response.data);
-          setProducts(response.data);
-        }
-        //throw new Error(response);
+        setProducts(response);
       })
       .catch((err) => {
-        if (err.response.status === 403) {
+        if (err.response && err.response.status === 403) {
           history.push("/login");
         } else if (err.name === "AbortError") {
           console.log("fetch abort");
