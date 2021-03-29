@@ -2,7 +2,15 @@ import "../../pages/shop.css";
 import { Link, useHistory } from "react-router-dom";
 import { postRequest } from "../../services/fetchdata";
 
-const Card = ({ title, imgSrc, imgAlt, price, description, id }) => {
+const Card = ({
+  title,
+  imgSrc,
+  imgAlt,
+  price,
+  description,
+  id,
+  isLoggedIn,
+}) => {
   const history = useHistory();
 
   const handleAddCart = () => {
@@ -15,7 +23,7 @@ const Card = ({ title, imgSrc, imgAlt, price, description, id }) => {
       .catch((err) => {});
   };
 
-  console.log(imgSrc);
+  console.log("LOOGED", isLoggedIn);
   return (
     <article className="card product-item">
       <header className="card__header">
@@ -32,9 +40,11 @@ const Card = ({ title, imgSrc, imgAlt, price, description, id }) => {
         <Link to={`/product/${id}`} className="btn">
           Details
         </Link>
-        <button className="btn" onClick={handleAddCart}>
-          Add to Cart
-        </button>
+        {isLoggedIn && (
+          <button className="btn" onClick={handleAddCart}>
+            Add to Cart
+          </button>
+        )}
       </div>
     </article>
   );

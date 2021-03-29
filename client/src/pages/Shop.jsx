@@ -29,6 +29,7 @@ const Shop = () => {
     return () => abortCont.abort(); //abort any fetch that is not complete
   }, []);
 
+  const isLoggedIn = !!user;
   const ListProduct = products.map((product, index) => (
     <Card
       key={index}
@@ -38,6 +39,7 @@ const Shop = () => {
       description={product.description}
       price={product.price}
       id={product._id}
+      isLoggedIn={isLoggedIn}
     ></Card>
   ));
 

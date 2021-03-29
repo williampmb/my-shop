@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
-import { useParams, useHistory } from "react-router-dom";
-import "./product-details.css";
+import { useHistory, useParams } from "react-router-dom";
+import { useLoginContext } from "../context/LoginContext";
 import { getRequest, postRequest } from "../services/fetchdata";
+import "./product-details.css";
 
 const ProductDetail = () => {
   const [product, setProduct] = useState({});
   const { id } = useParams();
   const history = useHistory();
+  const [user] = useLoginContext();
+
+  const isLoggedIn = !!user;
 
   const handleAddCart = () => {
     postRequest("/cart")
@@ -44,9 +48,11 @@ const ProductDetail = () => {
           </div>
           <h2>{product.price}</h2>
           <p>{product.description}</p>
-          <button className="btn" onClick={handleAddCart}>
-            Add to Cart
-          </button>
+          {isLoggedIn && (
+            <button className="btn" onClick={handleAddCart}>
+              Add to Cart
+            </button>
+          )}
         </main>
       )}
     </div>

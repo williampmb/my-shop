@@ -2,10 +2,10 @@ const Product = require("../models/product");
 const User = require("../models/user");
 const Order = require("../models/order");
 
-exports.getIndex = (req, response, next) => {
+exports.getIndex = (request, response, next) => {
   Product.find()
     .then((result) => {
-      response.status(200).send({ result, csrfToken: req.csrfToken() });
+      response.status(200).send({ result, csrfToken: request.csrfToken() });
     })
     .catch((err) => console.log(err));
 };
@@ -13,7 +13,7 @@ exports.getIndex = (req, response, next) => {
 exports.getProducts = (request, response, next) => {
   Product.find()
     .then((result) => {
-      response.status(200).send({ result, csrfToken: req.csrfToken() });
+      response.status(200).send({ result, csrfToken: request.csrfToken() });
     })
     .catch((err) => console.log(err));
 };
@@ -21,7 +21,7 @@ exports.getProductId = (request, response, next) => {
   const productId = request.params.id;
   Product.findById(productId)
     .then((result) => {
-      response.status(200).send({ result, csrfToken: req.csrfToken() });
+      response.status(200).send({ result, csrfToken: request.csrfToken() });
     })
     .catch();
 };
@@ -36,15 +36,15 @@ exports.getOrders = (request, response, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.getCart = (req, response, next) => {
-  req.user
+exports.getCart = (request, response, next) => {
+  request.user
     .populate("cart.items.productId")
     .execPopulate()
     .then((user) => {
       const products = user.cart.items;
       response
         .status(200)
-        .send({ result: products, csrfToken: req.csrfToken() });
+        .send({ result: products, csrfToken: request.csrfToken() });
     })
     .catch((err) => console.log(err));
 };
@@ -60,11 +60,11 @@ exports.deleteCartItem = (request, response, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.postCart = (req, response, next) => {
-  const productId = req.body.id;
+exports.postCart = (request, response, next) => {
+  const productId = request.body.id;
   Product.findById(productId)
     .then((product) => {
-      return req.user.addToCart(product);
+      return request.user.addToCart(product);
     })
     .then((result) => {
       response.status(200).send();
