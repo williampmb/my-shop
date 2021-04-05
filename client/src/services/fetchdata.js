@@ -5,23 +5,36 @@ axios.defaults.withCredentials = true;
 const abortCont = new AbortController();
 const proxy = "http://localhost:3000";
 
-const getRequest = (path) => {
-  return axios
-    .get(`${proxy}${path}`)
+const getRequest = (path, token) => {
+  let headers = {};
+  if (token) {
+    headers = {
+      Authorization: `Bearer ${token}`,
+    };
+  }
+  return fetch(`${proxy}${path}`, {
+    method: "GET",
+    headers,
+  })
     .then((response) => {
-      console.log("Getting data from server", response.data);
-      if (response.status === 200 && response.data.csrfToken) {
-        localStorage.setItem("csrfToken", response.data.csrfToken);
+      if (response.status === 200) {
+        return response.json();
       }
-      return response.data.result;
+      console.log(response);
+      throw Error(response);
     })
-    .catch((err) => console.log(err));
+    .then((response) => {
+      console.log("Getting data from server", response);
+
+      return response.result;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 const postRequest = (path, data) => {
-  const csrfToken = localStorage.getItem("csrfToken");
-
-  axios.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
+  console.log("POST DATA", data);
   return axios
     .post(`${proxy}${path}`, { ...data, signal: abortCont.signal })
     .then((res) => {
@@ -40,9 +53,6 @@ const postRequest = (path, data) => {
 };
 
 const deleteRequest = (path, data) => {
-  const csrfToken = localStorage.getItem("csrfToken");
-
-  axios.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
   return axios
     .post(proxy + path, { ...data })
     .then((response) => {

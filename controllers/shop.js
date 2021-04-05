@@ -3,9 +3,10 @@ const User = require("../models/user");
 const Order = require("../models/order");
 
 exports.getIndex = (request, response, next) => {
+  console.log("CALLING GETINDEX SHOP CONTROLLER");
   Product.find()
     .then((result) => {
-      response.status(200).send({ result, csrfToken: request.csrfToken() });
+      response.status(200).send({ result });
     })
     .catch((err) => console.log(err));
 };
@@ -13,7 +14,7 @@ exports.getIndex = (request, response, next) => {
 exports.getProducts = (request, response, next) => {
   Product.find()
     .then((result) => {
-      response.status(200).send({ result, csrfToken: request.csrfToken() });
+      response.status(200).send({ result });
     })
     .catch((err) => console.log(err));
 };
@@ -21,30 +22,26 @@ exports.getProductId = (request, response, next) => {
   const productId = request.params.id;
   Product.findById(productId)
     .then((result) => {
-      response.status(200).send({ result, csrfToken: request.csrfToken() });
+      response.status(200).send({ result });
     })
     .catch();
 };
 
 exports.getOrders = (request, response, next) => {
-  Order.find({ "user.userId": request.user._id })
-    .then((orders) =>
-      response
-        .status(200)
-        .send({ result: orders, csrfToken: request.csrfToken() })
-    )
+  Order.find({ "user.userId": request.userId })
+    .then((orders) => response.status(200).send({ result: orders }))
     .catch((err) => console.log(err));
 };
 
 exports.getCart = (request, response, next) => {
-  request.user
-    .populate("cart.items.productId")
-    .execPopulate()
+  User.findById(request.userId)
     .then((user) => {
+      return user.populate("cart.items.productId").execPopulate();
+    })
+    .then((user) => {
+      console.log(user);
       const products = user.cart.items;
-      response
-        .status(200)
-        .send({ result: products, csrfToken: request.csrfToken() });
+      response.status(200).send({ result: products });
     })
     .catch((err) => console.log(err));
 };

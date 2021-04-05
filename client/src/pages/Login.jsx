@@ -1,31 +1,10 @@
 import { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import axios from "axios";
-import { useLoginContext } from "../context/LoginContext";
-import { postRequest } from "../services/fetchdata";
 
-const Login = () => {
+const Login = (props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const user = useLoginContext.user;
-  const tk1 = useLoginContext.csrfToken;
 
-  const [, updateUser, csrfToken, , getToken] = useLoginContext();
-  const history = useHistory();
   useEffect(() => {});
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    postRequest("/login", { username, password }, csrfToken)
-      .then((data) => {
-        updateUser(data);
-        history.push("/");
-      })
-      .catch((err) => {
-        console.log("LOGIN ERROR");
-      });
-  };
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -35,7 +14,10 @@ const Login = () => {
   };
 
   return (
-    <form className="form" onSubmit={handleSubmit}>
+    <form
+      className="form"
+      onSubmit={(event) => props.onLogin(event, username, password)}
+    >
       <label className="form-control">
         Username
         <input

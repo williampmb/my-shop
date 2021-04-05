@@ -1,42 +1,41 @@
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 exports.login = (request, response, next) => {
   const email = request.body.username;
   const password = request.body.password;
+  let loadedUser;
   User.findOne({ email })
     .then((user) => {
       if (!user) {
         response.status(500).send({ error: "login or password wrong" });
       }
+      loadedUser = user;
       console.log("user", user);
-      bcrypt
-        .compare(password, user.password)
-        .then((doMatch) => {
-          if (doMatch) {
-            request.session.user = user;
-            return request.session.save((err) => {
-              console.log(err);
-              if (!err) {
-                response.status(200).send(user);
-              } else {
-                response
-                  .status(500)
-                  .send({ error: 500, msg: "Error to save session" });
-              }
-            });
-          }
-          console.log("doesnt match");
-          return response
-            .status(500)
-            .send({ error: "email or password wrong" });
-        })
-        .catch((err) => {
-          console.log(err);
-          response.status(500).send({ error: "something wrong" });
-        });
+      return bcrypt.compare(password, user.password);
     })
-    .catch((err) => console.log(err));
+    .then((doMatch) => {
+      if (!doMatch) {
+        console.log("doesnt match");
+        return response.status(500).send({ error: "email or password wrong" });
+      }
+
+      const token = jwt.sign(
+        {
+          email: loadedUser.email,
+          userId: loadedUser._id.toString(),
+        },
+        process.env.JWTSECRET,
+        { expiresIn: "1h" }
+      );
+
+      response.status(200).json({ token, userId: loadedUser._id.toString() });
+    })
+    .catch((err) => {
+      console.log(err);
+      response.status(500).send({ error: "something wrong" });
+    });
 };
 
 exports.logout = (request, response, next) => {

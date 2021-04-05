@@ -7,7 +7,7 @@ import { useHistory } from "react-router-dom";
 
 axios.defaults.withCredentials = true;
 
-const Header = () => {
+const Header = (props) => {
   const [page, setPage] = useState(1);
   const history = useHistory();
 
@@ -28,7 +28,6 @@ const Header = () => {
       .catch((err) => console.log(err));
   };
 
-  console.log("USER HEAD", user);
   return (
     <header className="main-header">
       <nav className="main-header__nav">
@@ -51,7 +50,7 @@ const Header = () => {
           >
             Products
           </NavItem>
-          {user && (
+          {props.isAuth && (
             <NavItem
               isActive={page === 3}
               to="/cart"
@@ -62,7 +61,7 @@ const Header = () => {
               Cart
             </NavItem>
           )}
-          {user && (
+          {props.isAuth && (
             <NavItem
               isActive={page === 6}
               to="/orders"
@@ -73,7 +72,7 @@ const Header = () => {
               Orders
             </NavItem>
           )}
-          {user && (
+          {props.isAuth && (
             <NavItem
               isActive={page === 4}
               to="/admin/add-product"
@@ -84,7 +83,7 @@ const Header = () => {
               Add Product
             </NavItem>
           )}
-          {user && (
+          {props.isAuth && (
             <NavItem
               isActive={page === 5}
               to="/admin/products"
@@ -95,21 +94,21 @@ const Header = () => {
           )}
         </ul>
         <div className="main-header__login">
-          {!user && (
+          {!props.isAuth && (
             <form action="/login">
               <button className="main-header__btn" type="submit">
                 Login
               </button>
             </form>
           )}
-          {!user && (
+          {!props.isAuth && (
             <form action="/signup">
               <button className="main-header__btn" type="submit">
                 signup
               </button>
             </form>
           )}
-          {user && (
+          {props.isAuth && (
             <form onSubmit={handleLogout}>
               <button className="main-header__btn" type="submit">
                 Logout

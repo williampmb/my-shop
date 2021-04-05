@@ -5,7 +5,7 @@ import { useLoginContext } from "../context/LoginContext";
 import { getRequest } from "../services/fetchdata";
 import "./shop.css";
 
-const Shop = () => {
+const Shop = (props) => {
   const [products, setProducts] = useState([]);
   const history = useHistory();
   const [user] = useLoginContext();
@@ -13,8 +13,10 @@ const Shop = () => {
   useEffect(() => {
     const abortCont = new AbortController();
 
-    getRequest("/")
+    console.log("CALLING SHOPJSX PRODUCTS");
+    getRequest("/", props.token, props.userId)
       .then((response) => {
+        console.log("Data from server ShopJSX", response);
         setProducts(response);
       })
       .catch((err) => {

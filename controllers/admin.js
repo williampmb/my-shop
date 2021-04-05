@@ -26,7 +26,7 @@ exports.getProducts = (request, response, next) => {
     // .select("title price -_id")
     // .populate("userId", "name")
     .then((result) => {
-      response.status(200).send({ result, csrfToken: request.csrfToken() });
+      response.status(200).send({ result });
     })
     .catch((err) => console.log(err));
 };
@@ -56,11 +56,7 @@ exports.editProduct = (request, response, next) => {
 exports.getProductForEditing = (request, response, next) => {
   const id = request.params.id;
   Product.findById(id)
-    .then((product) =>
-      response
-        .status(200)
-        .send({ result: product, csrfToken: request.csrfToken() })
-    )
+    .then((product) => response.status(200).send({ result: product }))
     .catch();
 };
 

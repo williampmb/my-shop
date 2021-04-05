@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { getRequest, postRequest, deleteRequest } from "../services/fetchdata";
 
-const Cart = () => {
+const Cart = (props) => {
   const [item, setItems] = useState([]);
   const history = useHistory();
   useEffect(() => {
@@ -10,8 +10,9 @@ const Cart = () => {
   }, []);
 
   const fetchCartItens = () => {
-    getRequest("/cart")
+    getRequest("/cart", props.token)
       .then((data) => {
+        console.log("CART GET ", data);
         setItems(data);
       })
       .catch((err) => {

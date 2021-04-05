@@ -3,21 +3,17 @@ import { useHistory } from "react-router-dom";
 import { useLoginContext } from "../context/LoginContext";
 import { getRequest } from "../services/fetchdata";
 
-const Orders = () => {
+const Orders = (props) => {
   const [orders, setOrders] = useState([]);
   const [user] = useLoginContext();
   const history = useHistory();
 
   useEffect(() => {
-    if (!user) {
-      history.push("/login");
-      return;
-    }
     fetchOrders();
   }, []);
 
   const fetchOrders = () => {
-    getRequest("/orders")
+    getRequest("/orders", props.token, props.userId)
       .then((orders) => {
         console.log("MY ORDERS", orders);
         setOrders(orders);
@@ -43,6 +39,7 @@ const Orders = () => {
     <main>
       <div>
         <ul>{orders && orders.length > 0 && ListOrders}</ul>
+        {!orders || (orders.length == 0 && <p>No Orders!</p>)}
       </div>
     </main>
   );

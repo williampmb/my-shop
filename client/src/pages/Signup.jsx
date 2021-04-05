@@ -22,7 +22,7 @@ const Signup = () => {
         console.log("RESP SIGNUP", res);
       })
       .then(() => {
-        history.push("/login");
+        history.push("/");
       })
       .catch((err) => console.log(err));
   };
